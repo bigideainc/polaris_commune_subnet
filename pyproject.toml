@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "polaris-subnet"
+version = "0.1.0"
+description = ""
+authors = ["Tobius Saul Bateesa"]
+readme = "README.md"
+packages = [{ include = "polaris_subnet" }]
+[tool.poetry.dependencies]
+python = "^3.10"
+communex = "^0.1.32"
+aiohttp = "^3.9.5"
+pyfiglet = "^1.0.2"
+keyboard = "^0.13.5"
+inquirerpy = "^0.3.4"
+argparse = "^1.4.0"
+asyncio = "^3.4.3"
+packaging = "^24.1"
+python-dotenv = "^1.0.1"
+halo = "^0.0.31"
+prettytable = "^3.10.2"
+loguru = "^0.7.2"
+requests = "^2.32.3"
+tqdm = "^4.66.4"
+pydantic = "^2.8.2"
+rich = "^13.7.1"
+jinja2 = "^3.1.4"
+keylimiter = "^0.1.5"
+pydantic-settings = "^2.3.4"
+docker="^7.1.0"
+typer="*"
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
