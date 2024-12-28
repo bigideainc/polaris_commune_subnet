@@ -43,7 +43,6 @@ class PolarisMiner(Module):
                     raise
                 self.logger.info("Retrying...")
 
-    
     def stop(self) -> None:
         """
         Stop the PolariseMiner server.

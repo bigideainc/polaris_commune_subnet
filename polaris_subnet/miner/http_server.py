@@ -83,7 +83,6 @@ class ComputeServer:
             server_thread = threading.Thread(target=self.server.serve_forever)
             server_thread.daemon = True
             server_thread.start()
-            logger.info(f"Server started on port {self.port}")
         except Exception as e:
             logger.error(f"Server start failed: {str(e)}")
             raise
