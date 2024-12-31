@@ -23,7 +23,7 @@ class PolarisMiner(Module):
         self.logger.info("Initailizing the PolariseMiner............")
         self.container_manager =ContainerManager()
         self.allocator = ResourceAllocator()
-        self.compute_port = 8080
+        self.compute_port = 8082
         self.port=port
         self.server = ComputeServer(port=self.compute_port, allocator=self.allocator)
         self.is_running = False
