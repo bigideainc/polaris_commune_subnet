@@ -7,7 +7,7 @@ import warnings
 import sys
 from dotenv import load_dotenv
 from polaris_subnet.validator.challenges import ChallengeGenerator
-from polaris_subnet.validator.scoring import ScoringSystem 
+from polaris_subnet.validator.pog import fetch_compute_specs,compare_compute_resources
 from polaris_subnet.validator.verification import Verifier
 import time 
 import  asyncio
@@ -24,20 +24,22 @@ class ValidatorNode(Module):
         self.max_allowed_weights = max_allowed_weights
         self.challenge_gen = ChallengeGenerator()
         self.verifier = Verifier()
-        self.scoring = ScoringSystem()
         self.miner_data: Dict[str, float] = {}
         self.container_start_times: Dict[str, datetime] = {}  # {container_id: start_time}
 
     def track_miner_containers(self):
         """Fetch and update active containers for each miner."""
-        # miners = self.get_miners()
-        miners=["UhsJfZCngizQoslnKWoL", "UhsJfZCngizQoslnKWoLko"]
-        active_miners=self.get_miner_list()
+        miners = self.get_miners()
+        # miners=["UhsJfZCngizQoslnKWoL", "INvE4ot3cSR8MGpxuwu8"]
+        # active_miners=self.get_miner_list()
+        miner_resources = self.get_miner_list_with_resources()
+        active_miners=list(miner_resources.keys())
+
         if not active_miners:
             logger.warning("No active miners found.")
             return []
         logger.info("Processing miners and their containers...")
-        results = self.process_miners(miners, active_miners)
+        results = self.process_miners(miners, active_miners, miner_resources)
         for result in results:
             self.miner_data[result['miner_uid']] = result['final_score']
 
@@ -62,7 +64,7 @@ class ValidatorNode(Module):
             response = requests.get(f"https://orchestrator-gekh.onrender.com/api/v1/containers/miner/{miner_uid}")
             if response.status_code == 200:
                 return response.json()
-            logger.warning(f"Failed to fetch containers for miner {miner_uid}. Status code: {response.status_code}")
+            logger.warning(f"No containers yet for {miner_uid}")
         except Exception as e:
             logger.error(f"Error fetching containers for miner {miner_uid}: {e}")
         return []
@@ -74,10 +76,32 @@ class ValidatorNode(Module):
             if response.status_code == 200:
                 miners_data = response.json()
                 return [miner["id"] for miner in miners_data if miner["status"] == "verified"]
-            logger.warning(f"Failed to fetch miners. Status code: {response.status_code}")
+            logger.warning(f"No verified miners yet on the network")
         except Exception as e:
             logger.error(f"Error fetching miner list: {e}")
         return []
+    
+    def get_miner_list_with_resources(self) -> Dict:
+        """
+        Fetch verified miners from the network along with their compute resources.
+        Returns a dictionary containing miner IDs and their compute resources.
+        """
+        verified_miners={}
+        try:
+            response = requests.get("https://orchestrator-gekh.onrender.com/api/v1/miners")
+            if response.status_code == 200:
+                miners_data = response.json()
+                verified_miners = {
+                    miner["id"]: miner["compute_resources"]
+                    for miner in miners_data
+                    if miner["status"] == "verified"
+                }
+                return verified_miners
+            else:
+                print(f"Failed to fetch miners. Status code: {response.status_code}")
+        except Exception as e:
+            print(f"Error fetching miner list: {e}")
+        return {}
 
     def validate_container(self, container_id: str) -> Dict:
         """Send a challenge to a container and validate its response."""
@@ -104,7 +128,7 @@ class ValidatorNode(Module):
             logger.error(f"Error validating container {container_id}: {e}")
             return {}
     
-    def process_miners(self, miners: List[str], active_miners: List[Dict]) -> List[Dict]:
+    def process_miners(self, miners, active_miners, compute_resources):
         """
         Process miners to validate their containers, calculate final scores,
         and return the results in the required format.
@@ -118,9 +142,23 @@ class ValidatorNode(Module):
         """
         results = []
         for miner in miners:
+            pog_scores=0
             if miner not in [m for m in active_miners]:
                 logger.debug(f"Miner {miner} is not active. Skipping...")
                 continue
+            #test for proof of resources
+            miner_resources=compute_resources.get(miner, None)
+            ssh_and_password=self.extract_ssh_and_password(miner_resources)
+            if "error" not in ssh_and_password:
+                ssh_string = "ssh tobius@7.tcp.eu.ngrok.io -p 19520"
+                password = ssh_and_password["password"]
+                # Use the extracted SSH and password in fetch_compute_specs
+                result = fetch_compute_specs(ssh_string, password)
+                pog_scores =compare_compute_resources(result,miner_resources[0])
+                logger.info(f"Miner {miner}'s results from pog {pog_scores}")
+                pog_scores=int(pog_scores["score"])
+            else:
+                pog_scores=0
             # Fetch containers for the miner
             containers = self.get_containers_for_miner(miner)
             total_termination_time = 0
@@ -131,20 +169,15 @@ class ValidatorNode(Module):
                 if container['status'] == 'terminated' and container['payment_status'] == 'pending':
                     scheduled_termination = container['subnet_details'].get('scheduled_termination', 0)
                     total_termination_time += scheduled_termination
-
-                    # Validate the container
-                    # validation_result = self.validate_container(container['container_id'])
-                    # if validation_result:
-                    #     rewarded_containers += 1
-                    #     total_score += validation_result.get('score', 0.0)
-                    total_score=0.5
-                    rewarded_containers=2
+                    rewarded_containers += 1
+                    total_score=total_termination_time 
+                    self.update_container_payment_status(container['container_id'])  
             # If containers are processed, calculate the final score
             if rewarded_containers > 0:
                 average_score = total_score / rewarded_containers
-                final_score = average_score + total_termination_time
+                final_score = average_score + total_termination_time + pog_scores
                 results.append({
-                    'miner_uid': 7,
+                    'miner_uid': miner,
                     'final_score': final_score
                 })
 
@@ -196,3 +229,23 @@ class ValidatorNode(Module):
         """Normalize scores to a range of 0 to 1."""
         max_score = max(scores.values(), default=1)
         return {uid: score / max_score for uid, score in scores.items()}
+
+    def extract_ssh_and_password(self,miner_resources):
+        
+        if not miner_resources:
+            return {"error": "No compute resources available for the miner."}
+
+        # Extract the first compute resource (assuming SSH and password are in the network field)
+        compute_resource = miner_resources[0]
+        network_info = compute_resource.get("network", {})
+
+        ssh_string = network_info.get("ssh", "").replace("ssh://", "ssh ").replace(":", " -p ")
+        password = network_info.get("password", "")
+
+        if not ssh_string or not password:
+            return {"error": "SSH or password information is missing."}
+
+        return {
+            "ssh_string": ssh_string,
+            "password": password
+        }

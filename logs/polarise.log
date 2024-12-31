@@ -650,3 +650,316 @@ Traceback (most recent call last):
   File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/uvicorn/server.py", line 328, in capture_signals
     signal.raise_signal(captured_signal)
 KeyboardInterrupt
+2024-12-30 19:30:38,840 - root - INFO - Initailizing the PolariseMiner............
+2024-12-30 19:30:51,879 - root - INFO - Starting PolariseMiner on port 8000 (Attempt 1)...
+2024-12-30 19:30:51,894 - root - INFO - PolariseMiner is running.
+2024-12-30 19:31:08,355 - ContainerLogger - ERROR - Failed to fetch data. HTTP status code: 404
+2024-12-30 19:31:39,043 - ContainerLogger - ERROR - Failed to fetch data. HTTP status code: 404
+2024-12-30 19:32:09,752 - ContainerLogger - ERROR - Failed to fetch data. HTTP status code: 404
+2024-12-30 19:32:40,460 - ContainerLogger - ERROR - Failed to fetch data. HTTP status code: 404
+2024-12-30 19:33:11,138 - ContainerLogger - ERROR - Failed to fetch data. HTTP status code: 404
+2024-12-30 19:33:30,973 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<Miner.serve_async() done, defined at /home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/polaris_subnet/miner/__init__.py:75> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/typer/core.py", line 225, in _main
+    rv = self.invoke(ctx)
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/click/core.py", line 1657, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/click/core.py", line 1404, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/click/core.py", line 760, in invoke
+    return __callback(*args, **kwargs)
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/typer/main.py", line 683, in wrapper
+    return callback(**use_params)  # type: ignore
+  File "/media/tobius/Transcend/Jarvis/polaris/polaris_subnet/cli.py", line 87, in miner
+    miner.serve()
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/polaris_subnet/miner/__init__.py", line 127, in serve
+    asyncio.run(self.serve_async())
+  File "/usr/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/usr/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/usr/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/polaris_subnet/miner/__init__.py", line 95, in serve_async
+    await asyncio.gather(
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/usr/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/uvicorn/server.py", line 68, in serve
+    with self.capture_signals():
+  File "/usr/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/uvicorn/server.py", line 328, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+2024-12-31 13:15:47,202 - root - INFO - Initailizing the PolariseMiner............
+2024-12-31 13:15:47,308 - polaris_subnet.miner.container - INFO - Docker client initialized using environment variables.
+2024-12-31 13:15:47,309 - polaris_subnet.miner.container - INFO - Initialized ContainerManager with host IP: 10.10.164.244
+2024-12-31 13:15:47,310 - polaris_subnet.miner.allocate - INFO - Initializing resource allocator service
+2024-12-31 13:15:47,324 - polaris_subnet.miner.container - INFO - Docker client initialized using environment variables.
+2024-12-31 13:15:47,325 - polaris_subnet.miner.container - INFO - Initialized ContainerManager with host IP: 10.10.164.244
+2024-12-31 13:16:04,038 - root - INFO - Starting PolarisMiner on port 8000...
+2024-12-31 13:16:04,043 - root - INFO - PolarisMiner is running.
+2024-12-31 13:27:40,998 - root - INFO - Received signal 2. Initiating graceful shutdown...
+2024-12-31 13:27:41,001 - root - INFO - Stopping PolarisMiner...
+2024-12-31 13:27:42,150 - root - INFO - Received signal 2. Initiating graceful shutdown...
+2024-12-31 13:27:42,152 - root - INFO - Stopping PolarisMiner...
+2024-12-31 13:27:42,610 - root - INFO - Received signal 2. Initiating graceful shutdown...
+2024-12-31 13:27:42,613 - root - INFO - Stopping PolarisMiner...
+2024-12-31 13:27:43,013 - root - INFO - Received signal 2. Initiating graceful shutdown...
+2024-12-31 13:27:43,017 - root - INFO - Stopping PolarisMiner...
+2024-12-31 13:27:43,244 - root - INFO - Received signal 2. Initiating graceful shutdown...
+2024-12-31 13:27:43,247 - root - INFO - Stopping PolarisMiner...
+2024-12-31 13:27:43,431 - root - INFO - Received signal 2. Initiating graceful shutdown...
+2024-12-31 13:27:43,434 - root - INFO - Stopping PolarisMiner...
+2024-12-31 13:27:43,616 - root - INFO - Received signal 2. Initiating graceful shutdown...
+2024-12-31 13:27:43,621 - root - INFO - Stopping PolarisMiner...
+2024-12-31 13:27:43,800 - root - INFO - Received signal 2. Initiating graceful shutdown...
+2024-12-31 13:27:43,803 - root - INFO - Stopping PolarisMiner...
+2024-12-31 13:27:43,970 - root - INFO - Received signal 2. Initiating graceful shutdown...
+2024-12-31 13:27:43,973 - root - INFO - Stopping PolarisMiner...
+2024-12-31 13:27:53,502 - root - INFO - Initailizing the PolariseMiner............
+2024-12-31 13:27:53,520 - polaris_subnet.miner.container - INFO - Docker client initialized using environment variables.
+2024-12-31 13:27:53,521 - polaris_subnet.miner.container - INFO - Initialized ContainerManager with host IP: 10.10.164.244
+2024-12-31 13:27:53,521 - polaris_subnet.miner.allocate - INFO - Initializing resource allocator service
+2024-12-31 13:27:53,534 - polaris_subnet.miner.container - INFO - Docker client initialized using environment variables.
+2024-12-31 13:27:53,536 - polaris_subnet.miner.container - INFO - Initialized ContainerManager with host IP: 10.10.164.244
+2024-12-31 13:35:48,848 - root - INFO - Initailizing the PolariseMiner............
+2024-12-31 13:35:48,864 - polaris_subnet.miner.container - INFO - Docker client initialized using environment variables.
+2024-12-31 13:35:48,865 - polaris_subnet.miner.container - INFO - Initialized ContainerManager with host IP: 10.10.164.244
+2024-12-31 13:35:48,865 - polaris_subnet.miner.allocate - INFO - Initializing resource allocator service
+2024-12-31 13:35:48,880 - polaris_subnet.miner.container - INFO - Docker client initialized using environment variables.
+2024-12-31 13:35:48,881 - polaris_subnet.miner.container - INFO - Initialized ContainerManager with host IP: 10.10.164.244
+2024-12-31 13:35:59,042 - root - INFO - Starting PolarisMiner on port 8000...
+2024-12-31 13:35:59,049 - root - INFO - PolarisMiner is running.
+2024-12-31 13:36:14,010 - ContainerLogger - ERROR - Failed to fetch data. HTTP status code: 404
+2024-12-31 13:36:23,471 - root - INFO - Received signal 2. Initiating graceful shutdown...
+2024-12-31 13:36:23,473 - root - INFO - Stopping PolarisMiner...
+2024-12-31 13:36:23,475 - root - INFO - PolarisMiner stopped.
+2024-12-31 13:36:23,657 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<Miner.serve_async() done, defined at /home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/polaris_subnet/miner/__init__.py:77> exception=SystemExit(0)>
+Traceback (most recent call last):
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/typer/main.py", line 311, in __call__
+    return get_command(self)(*args, **kwargs)
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/click/core.py", line 1130, in __call__
+    return self.main(*args, **kwargs)
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/typer/core.py", line 783, in main
+    return _main(
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/typer/core.py", line 225, in _main
+    rv = self.invoke(ctx)
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/click/core.py", line 1657, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/click/core.py", line 1404, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/click/core.py", line 760, in invoke
+    return __callback(*args, **kwargs)
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/typer/main.py", line 683, in wrapper
+    return callback(**use_params)  # type: ignore
+  File "/media/tobius/Transcend/Jarvis/polaris/polaris_subnet/cli.py", line 87, in miner
+    miner.serve()
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/polaris_subnet/miner/__init__.py", line 129, in serve
+    asyncio.run(self.serve_async())
+  File "/usr/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/usr/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/usr/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/polaris_subnet/miner/__init__.py", line 97, in serve_async
+    await asyncio.gather(
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/usr/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/uvicorn/server.py", line 68, in serve
+    with self.capture_signals():
+  File "/usr/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/uvicorn/server.py", line 328, in capture_signals
+    signal.raise_signal(captured_signal)
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/polaris_subnet/miner/Polarisnode.py", line 47, in handle_shutdown
+    sys.exit(0)
+SystemExit: 0
+2024-12-31 13:44:38,507 - root - INFO - Initailizing the PolariseMiner............
+2024-12-31 13:44:38,843 - polaris_subnet.miner.container - INFO - Docker client initialized using environment variables.
+2024-12-31 13:44:38,844 - polaris_subnet.miner.container - INFO - Initialized ContainerManager with host IP: 10.10.164.244
+2024-12-31 13:44:38,845 - polaris_subnet.miner.allocate - INFO - Initializing resource allocator service
+2024-12-31 13:44:38,862 - polaris_subnet.miner.container - INFO - Docker client initialized using environment variables.
+2024-12-31 13:44:38,863 - polaris_subnet.miner.container - INFO - Initialized ContainerManager with host IP: 10.10.164.244
+2024-12-31 13:44:49,310 - root - INFO - Starting PolarisMiner on port 8000...
+2024-12-31 13:44:49,315 - root - INFO - PolarisMiner is running.
+2024-12-31 13:45:03,890 - ContainerLogger - INFO - Total containers today: 1
+2024-12-31 13:45:04,240 - ContainerLogger - INFO - Active containers today: 1
+2024-12-31 13:45:04,242 - ContainerLogger - INFO - Terminated containers today: 0
+2024-12-31 13:45:35,094 - ContainerLogger - INFO - Total containers today: 1
+2024-12-31 13:45:35,096 - ContainerLogger - INFO - Active containers today: 1
+2024-12-31 13:45:35,098 - ContainerLogger - INFO - Terminated containers today: 0
+2024-12-31 13:46:05,775 - ContainerLogger - INFO - Total containers today: 1
+2024-12-31 13:46:05,777 - ContainerLogger - INFO - Active containers today: 1
+2024-12-31 13:46:05,778 - ContainerLogger - INFO - Terminated containers today: 0
+2024-12-31 13:46:36,474 - ContainerLogger - INFO - Total containers today: 1
+2024-12-31 13:46:36,475 - ContainerLogger - INFO - Active containers today: 1
+2024-12-31 13:46:36,476 - ContainerLogger - INFO - Terminated containers today: 0
+2024-12-31 13:47:07,311 - ContainerLogger - INFO - Total containers today: 1
+2024-12-31 13:47:07,546 - ContainerLogger - INFO - Active containers today: 1
+2024-12-31 13:47:07,548 - ContainerLogger - INFO - Terminated containers today: 0
+2024-12-31 13:47:24,851 - root - INFO - Received signal 2. Initiating graceful shutdown...
+2024-12-31 13:47:24,854 - root - INFO - Stopping PolarisMiner...
+2024-12-31 13:47:24,859 - root - INFO - PolarisMiner stopped.
+2024-12-31 13:47:25,080 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<Miner.serve_async() done, defined at /home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/polaris_subnet/miner/__init__.py:77> exception=SystemExit(0)>
+Traceback (most recent call last):
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/typer/main.py", line 311, in __call__
+    return get_command(self)(*args, **kwargs)
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/click/core.py", line 1130, in __call__
+    return self.main(*args, **kwargs)
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/typer/core.py", line 783, in main
+    return _main(
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/typer/core.py", line 225, in _main
+    rv = self.invoke(ctx)
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/click/core.py", line 1657, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/click/core.py", line 1404, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/click/core.py", line 760, in invoke
+    return __callback(*args, **kwargs)
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/typer/main.py", line 683, in wrapper
+    return callback(**use_params)  # type: ignore
+  File "/media/tobius/Transcend/Jarvis/polaris/polaris_subnet/cli.py", line 87, in miner
+    miner.serve()
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/polaris_subnet/miner/__init__.py", line 111, in serve
+    asyncio.run(self.serve_async())
+  File "/usr/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/usr/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/usr/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/polaris_subnet/miner/__init__.py", line 97, in serve_async
+    await asyncio.gather(
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/usr/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/uvicorn/server.py", line 68, in serve
+    with self.capture_signals():
+  File "/usr/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/uvicorn/server.py", line 328, in capture_signals
+    signal.raise_signal(captured_signal)
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/polaris_subnet/miner/Polarisnode.py", line 47, in handle_shutdown
+    sys.exit(0)
+SystemExit: 0
+2024-12-31 13:57:28,832 - root - INFO - Initailizing the PolariseMiner............
+2024-12-31 13:57:28,848 - polaris_subnet.miner.container - INFO - Docker client initialized using environment variables.
+2024-12-31 13:57:28,850 - polaris_subnet.miner.container - INFO - Initialized ContainerManager with host IP: 10.10.164.244
+2024-12-31 13:57:28,850 - polaris_subnet.miner.allocate - INFO - Initializing resource allocator service
+2024-12-31 13:57:28,865 - polaris_subnet.miner.container - INFO - Docker client initialized using environment variables.
+2024-12-31 13:57:28,866 - polaris_subnet.miner.container - INFO - Initialized ContainerManager with host IP: 10.10.164.244
+2024-12-31 13:57:45,183 - root - INFO - Starting PolarisMiner on port 8000...
+2024-12-31 13:57:45,185 - root - INFO - PolarisMiner is running.
+2024-12-31 13:57:58,409 - ContainerLogger - ERROR - Failed to fetch data. HTTP status code: 404
+2024-12-31 13:58:13,365 - root - INFO - Received signal 2. Initiating graceful shutdown...
+2024-12-31 13:58:13,367 - root - INFO - Stopping PolarisMiner...
+2024-12-31 13:58:13,367 - root - INFO - PolarisMiner stopped.
+2024-12-31 13:58:13,533 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<Miner.serve_async() done, defined at /home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/polaris_subnet/miner/__init__.py:76> exception=SystemExit(0)>
+Traceback (most recent call last):
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/typer/main.py", line 311, in __call__
+    return get_command(self)(*args, **kwargs)
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/click/core.py", line 1130, in __call__
+    return self.main(*args, **kwargs)
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/typer/core.py", line 783, in main
+    return _main(
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/typer/core.py", line 225, in _main
+    rv = self.invoke(ctx)
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/click/core.py", line 1657, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/click/core.py", line 1404, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/click/core.py", line 760, in invoke
+    return __callback(*args, **kwargs)
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/typer/main.py", line 683, in wrapper
+    return callback(**use_params)  # type: ignore
+  File "/media/tobius/Transcend/Jarvis/polaris/polaris_subnet/cli.py", line 87, in miner
+    miner.serve()
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/polaris_subnet/miner/__init__.py", line 110, in serve
+    asyncio.run(self.serve_async())
+  File "/usr/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/usr/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/usr/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/polaris_subnet/miner/__init__.py", line 96, in serve_async
+    await asyncio.gather(
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/usr/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/uvicorn/server.py", line 68, in serve
+    with self.capture_signals():
+  File "/usr/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/uvicorn/server.py", line 328, in capture_signals
+    signal.raise_signal(captured_signal)
+  File "/home/tobius/.cache/pypoetry/virtualenvs/polaris-subnet-z_bpSLHu-py3.10/lib/python3.10/site-packages/polaris_subnet/miner/Polarisnode.py", line 47, in handle_shutdown
+    sys.exit(0)
+SystemExit: 0
+2024-12-31 14:00:26,130 - polaris_subnet.miner.container - INFO - Docker client initialized using environment variables.
+2024-12-31 14:00:26,131 - polaris_subnet.miner.container - INFO - Initialized ContainerManager with host IP: 10.10.164.244
+2024-12-31 14:00:26,131 - polaris_subnet.miner.allocate - INFO - Initializing resource allocator service
+2024-12-31 14:00:26,145 - polaris_subnet.miner.container - INFO - Docker client initialized using environment variables.
+2024-12-31 14:00:26,146 - polaris_subnet.miner.container - INFO - Initialized ContainerManager with host IP: 10.10.164.244
+2024-12-31 14:00:36,044 - root - INFO - Starting PolarisMiner on port 8000...
+2024-12-31 14:00:36,045 - root - INFO - PolarisMiner is running.

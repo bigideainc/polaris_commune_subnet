@@ -7,21 +7,19 @@ from datetime import datetime, timezone
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("ContainerLogger")
 
-async def fetch_container_data():
-    url = "https://orchestrator-gekh.onrender.com/api/v1/containers/miner/UhsJfZCngizQoslnKWoL"
+async def fetch_container_data(miner_id):
+    url = f"https://orchestrator-gekh.onrender.com/api/v1/containers/miner/{miner_id}"
 
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response:
             if response.status == 200:
                 data = await response.json()
-                print(data)
                 process_container_data(data)
             else:
-                logger.error(f"Failed to fetch data. HTTP status code: {response.status}")
+                logger.error(f"You don't have any boxes running from Polaris-Compute")
 
 def process_container_data(data):
     current_date = datetime.now(timezone.utc).date()
-    print(current_date)
     total_containers = 0
     active_containers = 0
     terminated_containers = 0

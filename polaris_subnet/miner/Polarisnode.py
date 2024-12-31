@@ -18,41 +18,34 @@ from polaris_subnet.utils.logging import setup_logging
 class PolarisMiner(Module):
     def __init__(self,port: int = 8000):
         super().__init__()
-        self.logger = setup_logging()
+        self.logger = setup_logging(log_file='polarise.log', level='INFO')
+        self.logger.info("Logging setup complete.")
         self.logger.info("Initailizing the PolariseMiner............")
         self.container_manager =ContainerManager()
         self.allocator = ResourceAllocator()
         self.compute_port = 8080
         self.port=port
         self.server = ComputeServer(port=self.compute_port, allocator=self.allocator)
+        self.is_running = False
 
-    def start(self) -> None:
-        """
-        Start the PolariseMiner server.
-        """
-        retry_attempts = 3
-        for attempt in range(retry_attempts):
-            try:
-                self.logger.info(f"Starting PolariseMiner on port {self.port} (Attempt {attempt+1})...")
-                self.server.start()
-                self.logger.info("PolariseMiner is running.")
-                break
-            except Exception as e:
-                self.logger.error(f"Failed to start PolariseMiner: {e}")
-                if attempt == retry_attempts - 1:
-                    raise
-                self.logger.info("Retrying...")
+    def start(self):
+        self.logger.info(f"Starting PolarisMiner on port {self.port}...")
+        signal.signal(signal.SIGINT, self.handle_shutdown)
+        signal.signal(signal.SIGTERM, self.handle_shutdown)
+        self.server.start()
+        self.is_running = True
+        self.logger.info("PolarisMiner is running.")
 
-    def stop(self) -> None:
-        """
-        Stop the PolariseMiner server.
-        """
-        self.logger.info("Stopping PolariseMiner...")
+    def stop(self):
+        self.logger.info("Stopping PolarisMiner...")
         self.server.stop()
-        self.logger.info("PolariseMiner stopped.")
-        # self.container_manager.cleanup()
-        self.logger.info("PolariseMiner stopped.")
+        self.is_running = False
+        self.logger.info("PolarisMiner stopped.")
 
+    def handle_shutdown(self, signum, frame):
+        self.logger.info(f"Received signal {signum}. Initiating graceful shutdown...")
+        self.stop()
+        sys.exit(0)
 
 
 

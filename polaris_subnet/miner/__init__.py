@@ -22,12 +22,12 @@ from polaris_subnet.miner.utils import fetch_container_data
 class Miner(PolarisMiner):
     def __init__(self, key: Keypair, settings: MinerSettings = None) -> None:
         self.settings = settings or MinerSettings()
-        super().__init__(port=settings.port)
+        super().__init__(port=self.settings.port)
         self.key = key
         self.c_client = CommuneClient(get_node_url(use_testnet=self.settings.use_testnet))
         self.netuid = get_netuid(self.c_client)
         # Print out key and UID information
-        self.print_key_info()
+        # self.print_key_info()
         self.miner_uid= self.print_miner_uid()
     def print_key_info(self):
         """
@@ -67,7 +67,8 @@ class Miner(PolarisMiner):
         while True:
             try:
                 # Call the fetch_container_data function (imported or implemented)
-                data = await fetch_container_data()
+                data = await fetch_container_data(self.miner_uid)
+                logger.info(f"Found some users")
             except Exception as e:
                 logger.error(f"Error in fetching container data: {e}")
             await asyncio.sleep(interval)
@@ -96,24 +97,6 @@ class Miner(PolarisMiner):
             uvicorn_server.serve(),
             periodic_task
         )
-    # def serve(self):
-    #     # """
-    #     # Start the PolariseMiner and serve it on the specified port.
-    #     # """
-    #     # from communex.module.server import ModuleServer
-    #     # try:
-    #     #     logger.info("Starting PolariseMiner server...")
-    #     #     self.start()
-    #     #     logger.info("Registering PolariseMiner with Commune Subnet...")
-    #     #     server = ModuleServer(self, self.key, subnets_whitelist=[self.netuid])
-    #     #     app = server.get_fastapi_app()
-    #     #     logger.info(f"Serving FastAPI on {self.settings.host}:{self.settings.port}...")
-    #     #     uvicorn.run(app, host=self.settings.host, port=self.settings.port)
-    #     # except Exception as e:
-    #     #     logger.error(f"Error serving miner: {e}")
-    #     # finally:
-    #     #     self.stop()  # Cleanup resources when server stops
-    #     asyncio.run(self.serve_async())
     def serve(self):
         """
         Wrapper to start the asynchronous server using an existing event loop.
@@ -126,11 +109,11 @@ class Miner(PolarisMiner):
             # If no loop is running, start a new loop
             asyncio.run(self.serve_async())
 
-if __name__ == "__main__":
-    settings = MinerSettings(
-        host="0.0.0.0",
-        port=8080,
-        use_testnet=True,
-    )
-    miner = Miner(key=classic_load_key("polaris-miner0"), settings=settings)
-    miner.serve()
+# if __name__ == "__main__":
+#     settings = MinerSettings(
+#         host="0.0.0.0",
+#         port=8080,
+#         use_testnet=True,
+#     )
+#     miner = Miner(key=classic_load_key("polaris-miner0"), settings=settings)
+#     miner.serve()

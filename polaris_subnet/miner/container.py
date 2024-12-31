@@ -23,13 +23,24 @@ logger = logging.getLogger(__name__)
 class ContainerManager:
     def __init__(self):
         try:
+            # First attempt to initialize Docker client using environment variables
             self.client = docker.from_env()
-            self.image_name = "polarise-compute-image"
-            self.container_name = "polarise-compute-container"
-            self.host_ip = self._get_host_ip()
-        except DockerException as e:
-            logger.error(f"Failed to initialize Docker client: {e}")
-            raise
+            logger.info("Docker client initialized using environment variables.")
+        except DockerException as e_env:
+            logger.warning(f"docker.from_env() failed: {e_env}. Attempting to use Unix socket...")
+            try:
+                # Fallback to Unix socket
+                self.client = docker.DockerClient(base_url='unix://var/run/docker.sock')
+                logger.info("Docker client initialized using Unix socket.")
+            except DockerException as e_socket:
+                logger.error(f"Failed to initialize Docker client with Unix socket: {e_socket}")
+                raise DockerException("Failed to initialize Docker client with both from_env() and Unix socket.") from e_socket
+
+        self.image_name = "polarise-compute-image"
+        self.container_name = "polarise-compute-container"
+        self.host_ip = self._get_host_ip()
+        logger.info(f"Initialized ContainerManager with host IP: {self.host_ip}")
+
 
     def _get_host_ip(self) -> str:
         """Get the host machine's IP address."""
