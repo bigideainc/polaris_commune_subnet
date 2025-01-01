@@ -1,7 +1,7 @@
 
-# Polaris Compute Subnet [NetUID 12]
+# Polaris Compute Subnet [NetUID 33]
 
-Welcome to the **Polaris Compute Commune Subnet** repository. This project supports a decentralized AI ecosystem where miners provide compute resources to remote users, and validators ensure the integrity of the network. Below, you will find all the steps required to join and start contributing to the Polaris Compute Subnet (NetUID 12).
+Welcome to the **Polaris Compute Commune Subnet** repository. This project supports a decentralized AI ecosystem where miners provide compute resources to remote users, and validators ensure the integrity of the network. Below, you will find all the steps required to join and start contributing to the Polaris Compute Subnet (NetUID 33).
 
 ---
 
@@ -67,14 +67,14 @@ comx key create <your-key-name>
 
 ## Registration
 
-### Step 3: Register on Polaris Compute Subnet (NetUID 12)
+### Step 3: Register on Polaris Compute Subnet (NetUID 33)
 
 #### For Miners:
 
 Register as a miner with the following command:
 
 ```bash
-comx module register miner <your-key-name> 12
+comx module register miner <your-key-name> 33
 ```
 
 #### For Validators:
@@ -82,7 +82,7 @@ comx module register miner <your-key-name> 12
 Ensure your account has at least 50 COMAI tokens before running the registration command:
 
 ```bash
-comx module register validator <your-key-name> 12
+comx module register validator <your-key-name> 33
 ```
 
 ---
