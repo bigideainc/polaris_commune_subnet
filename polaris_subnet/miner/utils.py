@@ -16,7 +16,7 @@ async def fetch_container_data(miner_id):
                 data = await response.json()
                 process_container_data(data)
             else:
-                logger.error(f"You don't have any boxes running from Polaris-Compute")
+                logger.info(f"You don't have any boxes running from Polaris-Compute")
 
 def process_container_data(data):
     current_date = datetime.now(timezone.utc).date()
