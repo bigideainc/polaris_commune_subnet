@@ -169,3 +169,67 @@ def compare_compute_resources(new_resource, existing_resource):
     }
 
     return comparison_result
+
+
+def compute_resource_score(resource):
+    """
+    Calculate a score for a compute resource (CPU or GPU) based on its specifications.
+
+    Parameters:
+    resource (dict): A dictionary containing compute resource details.
+
+    Returns:
+    float: A score representing the performance of the resource.
+    """
+    score = 0
+    weights = {
+        "cpu": {
+            "cores": 0.4,
+            "threads_per_core": 0.1,
+            "max_clock_speed": 0.3,
+            "ram": 0.15,
+            "storage_speed": 0.05
+        },
+        "gpu": {
+            "vram": 0.5,
+            "compute_cores": 0.3,
+            "bandwidth": 0.2
+        }
+    }
+
+    if resource["resource_type"] == "CPU":
+        cpu_specs = resource.get("cpu_specs", {})
+        ram = float(resource.get("ram", "0GB").replace("GB", ""))
+        storage_speed = float(resource["storage"].get("read_speed", "0MB/s").replace("MB/s", ""))
+
+        # Normalize CPU values for scoring
+        cores_score = cpu_specs.get("total_cpus", 0) / 64  # Assuming max 64 cores
+        threads_score = cpu_specs.get("threads_per_core", 0) / 2  # Assuming max 2 threads/core
+        clock_speed_score = cpu_specs.get("cpu_max_mhz", 0) / 5000  # Assuming max 5 GHz
+        ram_score = ram / 128  # Assuming max 128GB RAM
+        storage_score = storage_speed / 1000  # Assuming max 1000MB/s
+
+        # Weighted score for CPU
+        score += (cores_score * weights["cpu"]["cores"] +
+                  threads_score * weights["cpu"]["threads_per_core"] +
+                  clock_speed_score * weights["cpu"]["max_clock_speed"] +
+                  ram_score * weights["cpu"]["ram"] +
+                  storage_score * weights["cpu"]["storage_speed"])
+
+    elif resource["resource_type"] == "GPU":
+        gpu_specs = resource.get("gpu_specs", {})
+        vram = float(gpu_specs.get("vram", "0GB").replace("GB", ""))
+        compute_cores = gpu_specs.get("compute_cores", 0)
+        bandwidth = float(gpu_specs.get("bandwidth", "0GB/s").replace("GB/s", ""))
+
+        # Normalize GPU values for scoring
+        vram_score = vram / 48  # Assuming max 48GB VRAM
+        compute_cores_score = compute_cores / 10000  # Assuming max 10k cores
+        bandwidth_score = bandwidth / 1000  # Assuming max 1 TB/s
+
+        # Weighted score for GPU
+        score += (vram_score * weights["gpu"]["vram"] +
+                  compute_cores_score * weights["gpu"]["compute_cores"] +
+                  bandwidth_score * weights["gpu"]["bandwidth"])
+
+    return round(score, 3)

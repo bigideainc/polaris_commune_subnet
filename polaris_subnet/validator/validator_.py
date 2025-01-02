@@ -7,7 +7,7 @@ import warnings
 import sys
 from dotenv import load_dotenv
 from polaris_subnet.validator.challenges import ChallengeGenerator
-from polaris_subnet.validator.pog import fetch_compute_specs,compare_compute_resources
+from polaris_subnet.validator.pog import fetch_compute_specs,compare_compute_resources,compute_resource_score
 from polaris_subnet.validator.verification import Verifier
 import time 
 import  asyncio
@@ -29,9 +29,8 @@ class ValidatorNode(Module):
 
     def track_miner_containers(self):
         """Fetch and update active containers for each miner."""
-        miners = self.get_miners()
-        # miners=["UhsJfZCngizQoslnKWoL", "YoLlLpCBozJBF9eoAkd8","Pr1L34ioD8GHkwnhJR0q"]
-        # active_miners=self.get_miner_list()
+        # miners = self.get_miners()
+        miners=["UhsJfZCngizQoslnKWoL", "YoLlLpCBozJBF9eoAkd8","Pr1L34ioD8GHkwnhJR0q"]
         value=self.verify_miners(miners)
         miner_resources = self.get_miner_list_with_resources()
         active_miners=list(miner_resources.keys())
@@ -40,7 +39,7 @@ class ValidatorNode(Module):
             logger.warning("No active miners found.")
             return []
         logger.info("Processing miners and their containers...")
-        results = self.process_miners(miners, active_miners)
+        results = self.process_miners(miners, active_miners,miner_resources)
         for result in results:
             self.miner_data[result['miner_uid']] = result['final_score']
 
@@ -126,43 +125,16 @@ class ValidatorNode(Module):
             print(f"Error fetching miner list: {e}")
         return {}
 
-    def validate_container(self, container_id: str) -> Dict:
-        """Send a challenge to a container and validate its response."""
-        try:
-            challenge = self.challenge_gen.generate_challenge(container_id)
-            logger.debug(f"Generated challenge for container {container_id}: {challenge}")
-
-            response = requests.put(
-                f"http://localhost:8080/challenge/{container_id}",
-                json=challenge,
-                headers={"Content-Type": "application/json"}
-            )
-            result = response.json()
-
-            if not self.verifier.verify_resource_usage(container_id, result):
-                logger.warning(f"Verification failed for container {container_id}")
-                return {}
-
-            score = self.scoring.calculate_score(container_id, result)
-            logger.info(f"Container {container_id} scored: {score}")
-            return {"score": score, "result": result}
-
-        except Exception as e:
-            logger.error(f"Error validating container {container_id}: {e}")
-            return {}
 
     def verify_miners(self,miners):
-        print(miners)
         compute_resources = self.get_unverified_miners()
         active_miners=list(compute_resources.keys())
         for miner in miners:
-            print(miner)
             pog_scores=0
             if miner not in [m for m in active_miners]:
                 logger.debug(f"Miner {miner} is not active. Skipping...")
                 continue
             #test for proof of resources
-            print(miner)
             miner_resources=compute_resources.get(miner, None)
             ssh_and_password=self.extract_ssh_and_password(miner_resources)
             if "error" not in ssh_and_password:
@@ -211,7 +183,7 @@ class ValidatorNode(Module):
             print(f"Error updating miner status: {e}")
             return None
     
-    def process_miners(self, miners, active_miners):
+    def process_miners(self, miners, active_miners,miner_resources):
         """
         Process miners to validate their containers, calculate final scores,
         and return the results in the required format.
@@ -225,14 +197,18 @@ class ValidatorNode(Module):
         """
         results = []
         for miner in miners:
-            if miner not in [m for m in active_miners]:
-                logger.debug(f"Miner {miner} is not active. Skipping...")
-                continue
-            # Fetch containers for the miner
-            containers = self.get_containers_for_miner(miner)
+            compute_score=0
             total_termination_time = 0
             total_score = 0.0
             rewarded_containers = 0
+            if miner not in [m for m in active_miners]:
+                logger.debug(f"Miner {miner} is not active. Skipping...")
+                continue
+            # Getting miners scores depending on the specs
+            resource_vals=miner_resources[miner]
+            compute_score=compute_resource_score(resource_vals[0])
+            # Fetch containers for the miner
+            containers = self.get_containers_for_miner(miner)
             for container in containers:
                 # Process only active containers with pending payment
                 if container['status'] == 'terminated' and container['payment_status'] == 'pending':
@@ -244,7 +220,7 @@ class ValidatorNode(Module):
             # If containers are processed, calculate the final score
             if rewarded_containers > 0:
                 average_score = total_score / rewarded_containers
-                final_score = average_score + total_termination_time 
+                final_score = average_score + total_termination_time + compute_score
                 results.append({
                     'miner_uid': miner,
                     'final_score': final_score

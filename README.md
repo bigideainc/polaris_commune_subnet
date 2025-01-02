@@ -87,17 +87,30 @@ comx module register validator <your-key-name> 33
 
 ---
 
-## Polar CLI Tool Configuration
+## Polaris Setup
 
-### Step 4: Install the Polar CLI Tool
+### Step 4: Clone the Repository
 
 Install the Polar CLI tool using pip:
 
 ```bash
-pip install polaris-cli-tool
+git clone https://github.com/bigideainc/polaris-subnet.git
+cd polaris-subnet
 ```
+### Step 5: Install Dependencies
+Ensure you have Python 3.6 or higher installed. Then, install the required dependencies:
+```bash
+pip install -e .
+```
+### Step 6: Configure SSH Password
+Polaris uses your machine's SSH password for secure connections. Add your SSH password to a .env file at the root of the project:
+```bash
+# .env file
+SSH_PASSWORD=your_password_here
+```
+Note: The SSH password is used to configure and manage secure SSH tunnels between your machine and the Polaris compute network.
 
-### Step 5: Start Polaris and Complete Registration
+### Step 7: Start Polaris and Complete Registration
 
 Start Polaris using:
 
@@ -116,7 +129,7 @@ During registration:
 - Provide the wallet name you created.
 - Follow the prompts to complete the registration.
 
-### Step 6: Check Polaris Status
+### Step 8: Check Polaris Status
 
 Ensure Polaris is running by checking its status:
 
@@ -132,9 +145,9 @@ Verify that your node is active on the [Polaris Dashboard](https://polaris-dashb
 
 ---
 
-## Repository Setup
+## Commune Repository Setup
 
-### Step 7: Clone the Repository
+### Step 9: Clone the Repository
 
 Clone the Commune Polaris Compute Subnet repository:
 
@@ -143,7 +156,7 @@ git clone https://github.com/bigideainc/polaris_commune_subnet.git
 cd polaris_commune_subnet
 ```
 
-### Step 8: Set Up the Environment
+### Step 10: Set Up the Environment
 
 Install Poetry:
 
@@ -167,7 +180,7 @@ pip install -e .
 
 ## Node Deployment
 
-### Step 9: Run Your Node
+### Step 11: Run Your Node
 
 #### For Miners:
 
