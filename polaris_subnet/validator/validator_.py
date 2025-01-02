@@ -16,7 +16,7 @@ from typing import List,Dict
 import requests
 
 class ValidatorNode(Module):
-    def __init__(self, key: Keypair, netuid: int, client: CommuneClient, max_allowed_weights: int = 420):
+    def __init__(self, key: Keypair, netuid: int, client: CommuneClient, max_allowed_weights: int = 500):
         super().__init__()
         self.key = key
         self.netuid = netuid

@@ -76,8 +76,8 @@ class Validator(BaseValidator, Module):
 
         try:
             uids = list(weighted_scores.keys())
-            # weights = list(weighted_scores.values())
-            weights = [0.1]
+            weights = list(weighted_scores.values())
+           
             print(f"uids to reward {uids}")
             print(f"weights to reward {weights}")
             # Update weights history
