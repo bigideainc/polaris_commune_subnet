@@ -30,16 +30,12 @@ class ValidatorNode(Module):
     def track_miner_containers(self):
         """Fetch and update active containers for each miner."""
         # miners = self.get_miners()
-        miners=["UhsJfZCngizQoslnKWoL", "YoLlLpCBozJBF9eoAkd8","Pr1L34ioD8GHkwnhJR0q"]
-        value=self.verify_miners(miners)
-        miner_resources = self.get_miner_list_with_resources()
-        active_miners=list(miner_resources.keys())
-
-        if not active_miners:
-            logger.warning("No active miners found.")
-            return []
+        miners=[7, 4,1,4]
+        commune_miners = self.get_filtered_miners(miners)
+        value=self.verify_miners(list(commune_miners.keys()))
+        miner_resources = self.get_miner_list_with_resources(commune_miners)
         logger.info("Processing miners and their containers...")
-        results = self.process_miners(miners, active_miners,miner_resources)
+        results = self.process_miners(miners, miner_resources)
         for result in results:
             self.miner_data[result['miner_uid']] = result['final_score']
 
@@ -69,32 +65,46 @@ class ValidatorNode(Module):
             logger.error(f"Error fetching containers for miner {miner_uid}: {e}")
         return []
 
-    def get_miner_list(self) -> List[Dict]:
-        """Fetch verified miners from the network."""
+    def get_filtered_miners(self, allowed_commune_uids: List[int]) -> Dict[str, str]:
+        """Fetch verified miners and return only those in the allowed_commune_uids list."""
         try:
-            response = requests.get("https://orchestrator-gekh.onrender.com/api/v1/miners")
+            response = requests.get("https://orchestrator-gekh.onrender.com/api/v1/commune/miners")
             if response.status_code == 200:
                 miners_data = response.json()
-                return [miner["id"] for miner in miners_data if miner["status"] == "verified"]
+                # Filter miners based on allowed_commune_uids
+                filtered_miners = {
+                    miner["miner_id"]: miner["network_info"]["commune_uid"]
+                    for miner in miners_data
+                    if miner["network_info"]["commune_uid"] in map(str, allowed_commune_uids) and miner.get("miner_id")
+                }
+                return filtered_miners
             logger.warning(f"No verified miners yet on the network")
         except Exception as e:
             logger.error(f"Error fetching miner list: {e}")
-        return []
-    
-    def get_miner_list_with_resources(self) -> Dict:
+        return {}
+    def get_miner_list_with_resources(self, miner_commune_map: Dict[str, str]) -> Dict:
         """
         Fetch verified miners from the network along with their compute resources.
-        Returns a dictionary containing miner IDs and their compute resources.
+        Match the miners with a given dictionary and add commune_uid if keys match.
+        
+        Args:
+            miner_commune_map (Dict[str, str]): Dictionary with miner IDs as keys and commune_uids as values.
+
+        Returns:
+            Dict: Dictionary containing miner IDs, their compute resources, and commune_uids.
         """
-        verified_miners={}
+        verified_miners = {}
         try:
             response = requests.get("https://orchestrator-gekh.onrender.com/api/v1/miners")
             if response.status_code == 200:
                 miners_data = response.json()
                 verified_miners = {
-                    miner["id"]: miner["compute_resources"]
+                    miner["id"]: {
+                        "compute_resources": miner["compute_resources"],
+                        "commune_uid": miner_commune_map.get(miner["id"])
+                    }
                     for miner in miners_data
-                    if miner["status"] == "verified"
+                    if miner["status"] == "verified" and miner["id"] in miner_commune_map
                 }
                 return verified_miners
             else:
@@ -183,7 +193,7 @@ class ValidatorNode(Module):
             print(f"Error updating miner status: {e}")
             return None
     
-    def process_miners(self, miners, active_miners,miner_resources):
+    def process_miners(self, miners, miner_resources):
         """
         Process miners to validate their containers, calculate final scores,
         and return the results in the required format.
@@ -196,6 +206,8 @@ class ValidatorNode(Module):
             List of dictionaries with miner UID, final score, and number of rewarded containers.
         """
         results = []
+        active_miners=[int(value["commune_uid"]) for value in miner_resources.values()]
+        print(f"active miners f{active_miners}")
         for miner in miners:
             compute_score=0
             total_termination_time = 0
@@ -205,28 +217,28 @@ class ValidatorNode(Module):
                 logger.debug(f"Miner {miner} is not active. Skipping...")
                 continue
             # Getting miners scores depending on the specs
-            resource_vals=miner_resources[miner]
-            compute_score=compute_resource_score(resource_vals[0])
-            # Fetch containers for the miner
-            containers = self.get_containers_for_miner(miner)
-            for container in containers:
-                # Process only active containers with pending payment
-                if container['status'] == 'terminated' and container['payment_status'] == 'pending':
-                    scheduled_termination = container['subnet_details'].get('scheduled_termination', 0)
-                    total_termination_time += scheduled_termination
-                    rewarded_containers += 1
-                    total_score=total_termination_time 
-                    self.update_container_payment_status(container['container_id'])  
-            # If containers are processed, calculate the final score
-            if rewarded_containers > 0:
-                average_score = total_score / rewarded_containers
-                final_score = average_score + total_termination_time + compute_score
-                results.append({
-                    'miner_uid': miner,
-                    'final_score': final_score
-                })
-
-        return results
+            for key, value in miner_resources.items():
+                if value["commune_uid"] == str(miner):
+                    compute_score=compute_resource_score(value["compute_resources"])
+                    # Fetch containers for the miner
+                    containers = self.get_containers_for_miner(key)
+                    for container in containers:
+                    # Process only active containers with pending payment
+                        if container['status'] == 'terminated' and container['payment_status'] == 'pending':
+                            scheduled_termination = container['subnet_details'].get('scheduled_termination', 0)
+                            total_termination_time += scheduled_termination
+                            rewarded_containers += 1
+                            total_score=total_termination_time 
+                            self.update_container_payment_status(container['container_id'])  
+                        # If containers are processed, calculate the final score
+                        if rewarded_containers > 0:
+                            average_score = total_score / rewarded_containers
+                            final_score = average_score + total_termination_time + compute_score
+                            results.append({
+                                'miner_uid': miner,
+                                'final_score': final_score
+                            })
+            return results
 
     def update_container_payment_status(container_id: str):
         """
