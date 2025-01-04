@@ -29,20 +29,20 @@ class ValidatorNode(Module):
 
     def track_miner_containers(self):
         """Fetch and update active containers for each miner."""
-        # miners = self.get_miners()
-        miners=[7, 4,1,4]
+        miners = self.get_miners()
         commune_miners = self.get_filtered_miners(miners)
         value=self.verify_miners(list(commune_miners.keys()))
         miner_resources = self.get_miner_list_with_resources(commune_miners)
         logger.info("Processing miners and their containers...")
         results = self.process_miners(miners, miner_resources)
-        for result in results:
-            self.miner_data[result['miner_uid']] = result['final_score']
-
-        logger.info("Miner score processing complete.")
-        logger.debug(f"Updated miner_data: {self.miner_data}")
+        if results is not None:
+            for result in results:
+                self.miner_data[result['miner_uid']] = result['final_score']
+            logger.info("Miner score processing complete.")
+            logger.debug(f"Updated miner_data: {self.miner_data}")
+        else:
+            logger.info("No miners to work on")
             
-
     def get_miners(self) -> List[str]:
         """Fetch miners from the network."""
         try:
@@ -139,30 +139,34 @@ class ValidatorNode(Module):
     def verify_miners(self,miners):
         compute_resources = self.get_unverified_miners()
         active_miners=list(compute_resources.keys())
-        for miner in miners:
-            pog_scores=0
-            if miner not in [m for m in active_miners]:
-                logger.debug(f"Miner {miner} is not active. Skipping...")
-                continue
-            #test for proof of resources
-            miner_resources=compute_resources.get(miner, None)
-            ssh_and_password=self.extract_ssh_and_password(miner_resources)
-            if "error" not in ssh_and_password:
-                ssh_string = ssh_and_password["ssh_string"]
-                password = ssh_and_password["password"]
-                
-                # Use the extracted SSH and password in fetch_compute_specs
-                result = fetch_compute_specs(ssh_string, password)
-                pog_scores =compare_compute_resources(result,miner_resources[0])
-                logger.info(f"Miner {miner}'s results from pog {pog_scores}")
-                pog_scores=int(pog_scores["score"])
-                if pog_scores>=14:
-                    self.update_miner_status(miner)
+        if active_miners:
+            for miner in miners:
+                pog_scores=0
+                if miner not in [m for m in active_miners]:
+                    logger.debug(f"Miner {miner} is not active. Skipping...")
+                    continue
+                #test for proof of resources
+                miner_resources=compute_resources.get(miner, None)
+                ssh_and_password=self.extract_ssh_and_password(miner_resources)
+                if "error" not in ssh_and_password:
+                    ssh_string = ssh_and_password["ssh_string"]
+                    password = ssh_and_password["password"]
+                    # ssh_string="ssh tobius@5.tcp.eu.ngrok.io -p 19747"
+                    # password="masaka1995t"
+                    # Use the extracted SSH and password in fetch_compute_specs
+                    result = fetch_compute_specs(ssh_string, password)
+                    pog_scores =compare_compute_resources(result,miner_resources[0])
+                    logger.info(f"Miner {miner}'s results from pog {pog_scores}")
+                    pog_scores=int(pog_scores["score"])
+                    if pog_scores>=10:
+                        self.update_miner_status(miner)
+                    else:
+                        logger.info(f"Miner {miner} is unverified")
                 else:
                     logger.info(f"Miner {miner} is unverified")
-            else:
-                logger.info(f"Miner {miner} is unverified")
-        return logger.info(f"Pending miner verification has been executed")
+            return logger.info(f"Pending miner verification has been executed")
+        else:
+            return logger.info(f"Currently no pending miners to verify")
 
 
     def update_miner_status(self,miner_id):
@@ -229,15 +233,17 @@ class ValidatorNode(Module):
                             total_termination_time += scheduled_termination
                             rewarded_containers += 1
                             total_score=total_termination_time 
-                            self.update_container_payment_status(container['container_id'])  
+                            self.update_container_payment_status(container['container_id']) 
+                        
+                         
                         # If containers are processed, calculate the final score
                         if rewarded_containers > 0:
                             average_score = total_score / rewarded_containers
-                            final_score = average_score + total_termination_time + compute_score
+                            final_score = average_score + total_termination_time + compute_score[0]
                             results.append({
                                 'miner_uid': miner,
                                 'final_score': final_score
-                            })
+                            }) 
             return results
 
     def update_container_payment_status(container_id: str):
