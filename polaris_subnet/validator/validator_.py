@@ -6,9 +6,7 @@ import math
 import warnings
 import sys
 from dotenv import load_dotenv
-from polaris_subnet.validator.challenges import ChallengeGenerator
 from polaris_subnet.validator.pog import fetch_compute_specs,compare_compute_resources,compute_resource_score
-from polaris_subnet.validator.verification import Verifier
 import time 
 import  asyncio
 from datetime import datetime
@@ -22,8 +20,6 @@ class ValidatorNode(Module):
         self.netuid = netuid
         self.client = client
         self.max_allowed_weights = max_allowed_weights
-        self.challenge_gen = ChallengeGenerator()
-        self.verifier = Verifier()
         self.miner_data: Dict[str, float] = {}
         self.container_start_times: Dict[str, datetime] = {}  # {container_id: start_time}
 
