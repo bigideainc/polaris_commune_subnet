@@ -57,7 +57,7 @@ def validator(
         call_timeout=call_timeout,
         host=host,
         port=port,
-        max_allowed_weights=420,
+        max_allowed_weights=500,
         subnet_name='legend',
         logging_level='INFO'
     )
