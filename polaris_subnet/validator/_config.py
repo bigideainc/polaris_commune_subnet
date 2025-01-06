@@ -7,5 +7,5 @@ class ValidatorSettings(PolarisBaseSettings):
     port: int = 8000
     iteration_interval: int = 800
     max_allowed_weights: int=500
-    subnet_name: str ="mosaic"
+    subnet_name: str ="compute"
     logging_level: str ="INFO"
