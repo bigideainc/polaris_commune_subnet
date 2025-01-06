@@ -6,6 +6,6 @@ class ValidatorSettings(PolarisBaseSettings):
     host: str = "0.0.0.0"
     port: int = 8000
     iteration_interval: int = 800
-    max_allowed_weights: int=420
+    max_allowed_weights: int=500
     subnet_name: str ="mosaic"
     logging_level: str ="INFO"
